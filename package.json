@@ -1,7 +1,7 @@
 {
-  "name": "overmind",
-  "version": "0.7.5",
-  "description": "OpenAPI client for overmind",
+  "name": "@overmindtech/overmind",
+  "version": "0.7.6",
+  "description": "OpenAPI client for @overmindtech/overmind",
   "author": "OpenAPI-Generator",
   "repository": {
     "type": "git",
