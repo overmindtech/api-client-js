@@ -13,7 +13,7 @@
  */
 
 
-export const BASE_PATH = "https://api.overmind.tech".replace(/\/+$/, "");
+export const BASE_PATH = "https://www.df.overmind-demo.com/api".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
