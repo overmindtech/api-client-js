@@ -50,19 +50,13 @@ export interface Source {
      */
     publicNkey?: string;
     /**
-     * How many replicas of the source to run??? Do we need this?
-     * @type {number}
-     * @memberof Source
-     */
-    replicas?: number;
-    /**
-     * Docker image of the source
+     * What source to configure. Currently either "stdlib" or "aws"
      * @type {string}
      * @memberof Source
      */
-    image?: string;
+    type?: string;
     /**
-     * Config for this source. See the source documentation for what config is available/required
+     * Config for this source. See the source documentation for what source-specific config is available/required
      * @type {{ [key: string]: string; }}
      * @memberof Source
      */
@@ -93,8 +87,7 @@ export function SourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): So
         'tokenName': !exists(json, 'token_name') ? undefined : json['token_name'],
         'tokenExpiry': !exists(json, 'token_expiry') ? undefined : json['token_expiry'],
         'publicNkey': !exists(json, 'public_nkey') ? undefined : json['public_nkey'],
-        'replicas': !exists(json, 'replicas') ? undefined : json['replicas'],
-        'image': !exists(json, 'image') ? undefined : json['image'],
+        'type': !exists(json, 'type') ? undefined : json['type'],
         'config': !exists(json, 'config') ? undefined : json['config'],
     };
 }
@@ -113,8 +106,7 @@ export function SourceToJSON(value?: Source | null): any {
         'token_name': value.tokenName,
         'token_expiry': value.tokenExpiry,
         'public_nkey': value.publicNkey,
-        'replicas': value.replicas,
-        'image': value.image,
+        'type': value.type,
         'config': value.config,
     };
 }

@@ -26,19 +26,13 @@ export interface AdminCreateSourceRequest {
      */
     descriptiveName?: string;
     /**
-     * How many replicas of the source to run??? Do we need this?
-     * @type {number}
-     * @memberof AdminCreateSourceRequest
-     */
-    replicas?: number;
-    /**
-     * Docker image of the source
+     * What source to configure. Currently either "stdlib" or "aws"
      * @type {string}
      * @memberof AdminCreateSourceRequest
      */
-    image?: string;
+    type?: string;
     /**
-     * Config for this source. See the source documentation for what config is available/required
+     * Config for this source. See the source documentation for what source-specific config is available/required
      * @type {{ [key: string]: string; }}
      * @memberof AdminCreateSourceRequest
      */
@@ -65,8 +59,7 @@ export function AdminCreateSourceRequestFromJSONTyped(json: any, ignoreDiscrimin
     return {
         
         'descriptiveName': !exists(json, 'descriptive_name') ? undefined : json['descriptive_name'],
-        'replicas': !exists(json, 'replicas') ? undefined : json['replicas'],
-        'image': !exists(json, 'image') ? undefined : json['image'],
+        'type': !exists(json, 'type') ? undefined : json['type'],
         'config': !exists(json, 'config') ? undefined : json['config'],
     };
 }
@@ -81,8 +74,7 @@ export function AdminCreateSourceRequestToJSON(value?: AdminCreateSourceRequest 
     return {
         
         'descriptive_name': value.descriptiveName,
-        'replicas': value.replicas,
-        'image': value.image,
+        'type': value.type,
         'config': value.config,
     };
 }
