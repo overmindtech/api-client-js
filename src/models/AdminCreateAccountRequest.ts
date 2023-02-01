@@ -24,7 +24,7 @@ export interface AdminCreateAccountRequest {
      * @type {string}
      * @memberof AdminCreateAccountRequest
      */
-    name?: string;
+    name: string;
 }
 
 /**
@@ -32,6 +32,7 @@ export interface AdminCreateAccountRequest {
  */
 export function instanceOfAdminCreateAccountRequest(value: object): boolean {
     let isInstance = true;
+    isInstance = isInstance && "name" in value;
 
     return isInstance;
 }
@@ -46,7 +47,7 @@ export function AdminCreateAccountRequestFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'name': !exists(json, 'name') ? undefined : json['name'],
+        'name': json['name'],
     };
 }
 

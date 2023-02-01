@@ -24,19 +24,25 @@ export interface AdminCreateSourceRequest {
      * @type {string}
      * @memberof AdminCreateSourceRequest
      */
-    descriptiveName?: string;
+    descriptiveName: string;
     /**
      * What source to configure. Currently either "stdlib" or "aws"
      * @type {string}
      * @memberof AdminCreateSourceRequest
      */
-    type?: string;
+    type: string;
     /**
-     * Config for this source. See the source documentation for what source-specific config is available/required
+     * Config for this source. See the source documentation for what source-specific config is available/required. This will be supplied directly to viper via a config file at `/etc/srcman/config/source.yaml`
+     * @type {object}
+     * @memberof AdminCreateSourceRequest
+     */
+    config?: object;
+    /**
+     * Additional config options that should be passed to the source. The keys of this object should be file names, and the values should be their content. These files will be made available to the source at runtime. Check the source's documentation for what to configure here if required
      * @type {{ [key: string]: string; }}
      * @memberof AdminCreateSourceRequest
      */
-    config?: { [key: string]: string; };
+    additionalConfig?: { [key: string]: string; };
 }
 
 /**
@@ -44,6 +50,8 @@ export interface AdminCreateSourceRequest {
  */
 export function instanceOfAdminCreateSourceRequest(value: object): boolean {
     let isInstance = true;
+    isInstance = isInstance && "descriptiveName" in value;
+    isInstance = isInstance && "type" in value;
 
     return isInstance;
 }
@@ -58,9 +66,10 @@ export function AdminCreateSourceRequestFromJSONTyped(json: any, ignoreDiscrimin
     }
     return {
         
-        'descriptiveName': !exists(json, 'descriptive_name') ? undefined : json['descriptive_name'],
-        'type': !exists(json, 'type') ? undefined : json['type'],
+        'descriptiveName': json['descriptive_name'],
+        'type': json['type'],
         'config': !exists(json, 'config') ? undefined : json['config'],
+        'additionalConfig': !exists(json, 'additional_config') ? undefined : json['additional_config'],
     };
 }
 
@@ -76,6 +85,7 @@ export function AdminCreateSourceRequestToJSON(value?: AdminCreateSourceRequest 
         'descriptive_name': value.descriptiveName,
         'type': value.type,
         'config': value.config,
+        'additional_config': value.additionalConfig,
     };
 }
 

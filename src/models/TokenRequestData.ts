@@ -24,13 +24,13 @@ export interface TokenRequestData {
      * @type {string}
      * @memberof TokenRequestData
      */
-    userPubKey?: string;
+    userPubKey: string;
     /**
      * Friendly user name
      * @type {string}
      * @memberof TokenRequestData
      */
-    userName?: string;
+    userName: string;
 }
 
 /**
@@ -38,6 +38,8 @@ export interface TokenRequestData {
  */
 export function instanceOfTokenRequestData(value: object): boolean {
     let isInstance = true;
+    isInstance = isInstance && "userPubKey" in value;
+    isInstance = isInstance && "userName" in value;
 
     return isInstance;
 }
@@ -52,8 +54,8 @@ export function TokenRequestDataFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'userPubKey': !exists(json, 'user_pub_key') ? undefined : json['user_pub_key'],
-        'userName': !exists(json, 'user_name') ? undefined : json['user_name'],
+        'userPubKey': json['user_pub_key'],
+        'userName': json['user_name'],
     };
 }
 

@@ -24,13 +24,13 @@ export interface Account {
      * @type {string}
      * @memberof Account
      */
-    name?: string;
+    name: string;
     /**
      * The public Nkey which signs all NATS "user" tokens
      * @type {string}
      * @memberof Account
      */
-    publicNkey?: string;
+    publicNkey: string;
 }
 
 /**
@@ -38,6 +38,8 @@ export interface Account {
  */
 export function instanceOfAccount(value: object): boolean {
     let isInstance = true;
+    isInstance = isInstance && "name" in value;
+    isInstance = isInstance && "publicNkey" in value;
 
     return isInstance;
 }
@@ -52,8 +54,8 @@ export function AccountFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
     }
     return {
         
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'publicNkey': !exists(json, 'public_nkey') ? undefined : json['public_nkey'],
+        'name': json['name'],
+        'publicNkey': json['public_nkey'],
     };
 }
 

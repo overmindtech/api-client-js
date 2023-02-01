@@ -24,43 +24,49 @@ export interface Source {
      * @type {string}
      * @memberof Source
      */
-    descriptiveName?: string;
+    descriptiveName: string;
     /**
      * Unique ID of the source
      * @type {string}
      * @memberof Source
      */
-    sourceId?: string;
+    sourceId: string;
     /**
      * The name of the nats JWT that has been generated for this source
      * @type {string}
      * @memberof Source
      */
-    tokenName?: string;
+    tokenName: string;
     /**
      * When the NATS JWT expires (unix time)
      * @type {number}
      * @memberof Source
      */
-    tokenExpiry?: number;
+    tokenExpiry: number;
     /**
      * The public NKey associated with the NATS JWT
      * @type {string}
      * @memberof Source
      */
-    publicNkey?: string;
+    publicNkey: string;
     /**
      * What source to configure. Currently either "stdlib" or "aws"
      * @type {string}
      * @memberof Source
      */
-    type?: string;
+    type: string;
     /**
-     * Config for this source. See the source documentation for what source-specific config is available/required
+     * Config for this source. See the source documentation for what source-specific config is available/required. This will be supplied directly to viper via a config file at `/etc/srcman/config/source.yaml`
+     * @type {object}
+     * @memberof Source
+     */
+    config?: object;
+    /**
+     * Additional config options that should be passed to the source. The keys of this object should be file names, and the values should be their content. These files will be made available to the source at runtime. Check the source's documentation for what to configure here if required
      * @type {{ [key: string]: string; }}
      * @memberof Source
      */
-    config?: { [key: string]: string; };
+    additionalConfig?: { [key: string]: string; };
 }
 
 /**
@@ -68,6 +74,12 @@ export interface Source {
  */
 export function instanceOfSource(value: object): boolean {
     let isInstance = true;
+    isInstance = isInstance && "descriptiveName" in value;
+    isInstance = isInstance && "sourceId" in value;
+    isInstance = isInstance && "tokenName" in value;
+    isInstance = isInstance && "tokenExpiry" in value;
+    isInstance = isInstance && "publicNkey" in value;
+    isInstance = isInstance && "type" in value;
 
     return isInstance;
 }
@@ -82,13 +94,14 @@ export function SourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): So
     }
     return {
         
-        'descriptiveName': !exists(json, 'descriptive_name') ? undefined : json['descriptive_name'],
-        'sourceId': !exists(json, 'source_id') ? undefined : json['source_id'],
-        'tokenName': !exists(json, 'token_name') ? undefined : json['token_name'],
-        'tokenExpiry': !exists(json, 'token_expiry') ? undefined : json['token_expiry'],
-        'publicNkey': !exists(json, 'public_nkey') ? undefined : json['public_nkey'],
-        'type': !exists(json, 'type') ? undefined : json['type'],
+        'descriptiveName': json['descriptive_name'],
+        'sourceId': json['source_id'],
+        'tokenName': json['token_name'],
+        'tokenExpiry': json['token_expiry'],
+        'publicNkey': json['public_nkey'],
+        'type': json['type'],
         'config': !exists(json, 'config') ? undefined : json['config'],
+        'additionalConfig': !exists(json, 'additional_config') ? undefined : json['additional_config'],
     };
 }
 
@@ -108,6 +121,7 @@ export function SourceToJSON(value?: Source | null): any {
         'public_nkey': value.publicNkey,
         'type': value.type,
         'config': value.config,
+        'additional_config': value.additionalConfig,
     };
 }
 
