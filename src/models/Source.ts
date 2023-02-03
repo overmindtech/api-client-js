@@ -67,6 +67,18 @@ export interface Source {
      * @memberof Source
      */
     additionalConfig?: { [key: string]: string; };
+    /**
+     * Whether the source is healthy or not
+     * @type {boolean}
+     * @memberof Source
+     */
+    healthy: boolean;
+    /**
+     * The error message if the source is unhealthy
+     * @type {string}
+     * @memberof Source
+     */
+    error?: string;
 }
 
 /**
@@ -80,6 +92,7 @@ export function instanceOfSource(value: object): boolean {
     isInstance = isInstance && "tokenExpiry" in value;
     isInstance = isInstance && "publicNkey" in value;
     isInstance = isInstance && "type" in value;
+    isInstance = isInstance && "healthy" in value;
 
     return isInstance;
 }
@@ -102,6 +115,8 @@ export function SourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): So
         'type': json['type'],
         'config': !exists(json, 'config') ? undefined : json['config'],
         'additionalConfig': !exists(json, 'additional_config') ? undefined : json['additional_config'],
+        'healthy': json['healthy'],
+        'error': !exists(json, 'error') ? undefined : json['error'],
     };
 }
 
@@ -122,6 +137,8 @@ export function SourceToJSON(value?: Source | null): any {
         'type': value.type,
         'config': value.config,
         'additional_config': value.additionalConfig,
+        'healthy': value.healthy,
+        'error': value.error,
     };
 }
 
