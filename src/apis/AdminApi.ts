@@ -66,6 +66,10 @@ export interface AdminGetSourceRequest {
     sourceId: string;
 }
 
+export interface AdminKeepaliveSourcesRequest {
+    accountName: string;
+}
+
 export interface AdminListSourcesRequest {
     accountName: string;
 }
@@ -212,7 +216,11 @@ export class AdminApi extends runtime.BaseAPI {
             body: TokenRequestDataToJSON(requestParameters.tokenRequestData),
         }, initOverrides);
 
-        return new runtime.TextApiResponse(response) as any;
+        if (this.isJsonMime(response.headers.get('content-type'))) {
+            return new runtime.JSONApiResponse<string>(response);
+        } else {
+            return new runtime.TextApiResponse(response) as any;
+        }
     }
 
     /**
@@ -396,6 +404,47 @@ export class AdminApi extends runtime.BaseAPI {
     async adminGetSource(requestParameters: AdminGetSourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Source> {
         const response = await this.adminGetSourceRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Updates sources to keep them running in the background. This can be used to add explicit action, when the built-in keepalives are not sufficient.
+     * Sources - Keepalive
+     */
+    async adminKeepaliveSourcesRaw(requestParameters: AdminKeepaliveSourcesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.accountName === null || requestParameters.accountName === undefined) {
+            throw new runtime.RequiredError('accountName','Required parameter requestParameters.accountName was null or undefined when calling adminKeepaliveSources.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", ["admin:write"]);
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", ["admin:write"]);
+        }
+
+        const response = await this.request({
+            path: `/admin/accounts/{account_name}/sources/keepalive`.replace(`{${"account_name"}}`, encodeURIComponent(String(requestParameters.accountName))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Updates sources to keep them running in the background. This can be used to add explicit action, when the built-in keepalives are not sufficient.
+     * Sources - Keepalive
+     */
+    async adminKeepaliveSources(requestParameters: AdminKeepaliveSourcesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.adminKeepaliveSourcesRaw(requestParameters, initOverrides);
     }
 
     /**
