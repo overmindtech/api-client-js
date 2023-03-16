@@ -269,6 +269,43 @@ export class CoreApi extends runtime.BaseAPI {
     }
 
     /**
+     * Updates sources to keep them running in the background. This can be used to add explicit action, when the built-in keepalives are not sufficient.
+     * Sources - Keepalive
+     */
+    async keepaliveSourcesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", ["source:write"]);
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", ["source:write"]);
+        }
+
+        const response = await this.request({
+            path: `/core/sources/keepalive`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Updates sources to keep them running in the background. This can be used to add explicit action, when the built-in keepalives are not sufficient.
+     * Sources - Keepalive
+     */
+    async keepaliveSources(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.keepaliveSourcesRaw(initOverrides);
+    }
+
+    /**
      * Lists all sources within the user\'s account
      * Sources - List
      */
